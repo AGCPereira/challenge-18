@@ -20,7 +20,9 @@ const UserSchema = new Schema(
             type: String,
             unique: true,
             required: true,
-            validate: [validateEmail, 'Please provide a valid email address.'],
+            validate: {
+                validator: validateEmail,
+                message: 'Provide a valid email address.'},
         },
         thoughts: [{
             type: Schema.Types.ObjectId,

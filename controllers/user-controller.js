@@ -16,15 +16,16 @@ const userController = {
         User.find({})
         .populate({
             path: 'thoughts',
+            select: ['-__v', '-username']
         })
         .populate({
             path: 'friends',
+            select: '-__v'
         })
         .select('-__v')
         .sort({_id: -1})
         .then(userData => res.json(userData))
-        .catch(err => {
-            res.status(400).json(err);
+        .catch(err => {res.status(400).json(err);
         });
     },
 
@@ -33,13 +34,38 @@ const userController = {
         User.findOne({ _id: params.id })
         .populate({
             path: 'thoughts',
+            select: ['-__v', '-username']
+        })
+        .populate({
+            path: 'friends',
+            select: '-__v'
+        })
+        .select('-__v')
+        .then(userData => {
+            // return if no user is found
+            if (!userData) {
+                res.status(404).json({ message: "No user found." });
+                return;
+            }
+            // else return user data
+            res.json(userData);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+
+    // get data of single user by username
+    getUserByName({ params }, res) {s
+        User.findOne({ username: params.username })
+        .populate({
+            path: 'thoughts',
+            select: ['-__v', '-username']
         })
         .populate({
             path: 'friends',
         })
         .select('-__v')
         .then(userData => {
-            // return if no user is found
+            // return if no user is founds
             if (!userData) {
                 res.status(404).json({ message: "No user found." });
                 return;
@@ -61,6 +87,10 @@ const userController = {
                 return;
             }
             res.json(userData);
+        })
+        .catch(err => res.status(400).json(err));
+        Thought.updateMany({ username: userData.username }, { username: body.username });
+            res.json({ message: "User information updated." });
         })
         .catch(err => res.status(400).json(err));
     },
