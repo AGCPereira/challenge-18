@@ -3,6 +3,7 @@ const { Schema, model} = require('mongoose');
 
 // validators
 function validateEmail(email) {
+    return true;
 
 }
 
